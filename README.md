@@ -1,5 +1,5 @@
 # AI Food Assistant
-A free AI Food Assistant based on OpenClaw. From Paprika App recipes to mealplan to Google Keep grocery list. 
+A free AI Food Assistant based on OpenClaw. From Paprika App recipes to meal plan to Google Keep grocery list. 
 
 # Setup
 
