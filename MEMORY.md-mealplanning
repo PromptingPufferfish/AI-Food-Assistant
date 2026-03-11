@@ -1,0 +1,145 @@
+# Process: Creating a Meal Plan and Populating Google Keep
+
+This document defines the recurring process for generating a weekly meal plan
+using Paprika App recipes and syncing the required ingredients to a Google Keep
+shopping list.
+
+Table of Contents
+1. Gather Meal Planning Criteria
+2. Retrieve Recipes from Paprika
+3. Generate and Adjust Meal Plan
+4. Store Confirmed Meal Plan
+5. Aggregate Ingredients
+6. Sync Ingredients to Google Keep
+7. Completion Notification
+
+## 1. Gather Meal Planning Criteria
+
+Ask the user for planning parameters:
+- Which calendar week is the meal planning for?
+- Number of People? 
+- Visitors? Which days?
+- Dietary preferences (e.g., vegetarian, fish, meat)
+- Allergies or ingredient restrictions
+- Any additional custom notes
+
+## 2. Calculate Scaling Factors
+
+- Core family meals: scale to exact number of people
+- Visitor days: calculate multiplier (e.g., 6 people / 4 base serves = 1.5x)
+- Sunday meals: keep full recipe sizes (8-10 serves) for extra portions
+- Vegetarian ratio: track total vegetarian vs non-vegetarian meals
+- Fish days: ensure exact number of fish meals per week
+
+## 2. Retrieve Recipes from Paprika
+
+- Use the Paprika skill to fetch recipes that match the provided criteria.
+- Do not request user credentials; authentication is already stored within the skill.
+- Only use Paprika for recipe retrieval—no external tools or sources are allowed.
+
+## 3. Generate and Adjust Meal Plan
+
+- Propose a preliminary meal plan based on the selected recipes.
+- Show the meal plan draft to the user in a formatted way, allowing iterative adjustments until confirmed.
+- Respect all preferences and constraints throughout revisions.
+
+## 4. Store Confirmed Meal Plan
+
+- do not store a MEALPLAN* file before user has explicitly confirmed the meal plan drafted in the previous step.
+- When the meal plan is confirmed, store it as a plain text file under:
+/memory/MEALPLAN_YYYY-WW
+  where YYYY-WW represents the calendar week the mealplan is scheduled for
+- The file may include recipes, notes, and metadata as plain text or structured data.
+
+## 5. Aggregate Ingredients
+
+- Extract all ingredients and their quantities from the selected recipes.
+- Convert all units to metric (gram, kilogram, litre, etc.).
+- Apply scaling factors per day (core family vs visitor days).
+- Merge identical ingredients, summing up their total quantities.
+- Save the final list to:
+/memory/SHOPPINGLIST_YYYY-WW
+  where YYYY-WW represents the calendar week the mealplan related to this shopping list is scheduled for
+
+  Format: one ingredient per line, e.g.
+  ingredient_name quantity unit (<days on which ingredient is needed>, <recipes for which ingredient is needed>)
+  No headers or additional formatting lines.
+
+### Scaling Calculations
+- Core family meals: Scale to exact number of people
+- Visitor days: Calculate multiplier (guests + core family ÷ base serves)
+  Example: 6 people ÷ 4 base serves = 1.5x scaling factor
+- Sunday meals: Keep full recipe sizes (8-10 serves) for extra portions
+- Vegetarian ratio: Track total vegetarian vs non-vegetarian meals
+- Fish days: Ensure exact number of fish meals per week
+
+### Error Handling Strategies
+- Special characters require single quotes in gkeep commands
+- Verify environment variables before each Paprika/gkeep command
+- Validate Note ID freshness before gkeep operations
+- Use timestamp-based note IDs (e.g., 0000000000000.0000000000)
+- Check virtual environment activation status
+- Handle fractional quantities by rounding up to practical units
+
+### Scaling Factors
+- Core family meals: Scale to exact number of people
+- Visitor days: Calculate multiplier (guests + core family ÷ base serves)
+  Example: 6 people ÷ 4 base serves = 1.5x scaling factor
+- Dietary tracking: Monitor vegetarian and fish day count
+
+## 6. Sync Ingredients to Google Keep
+
+- For each ingredient in the SHOPPINGLIST_YYYY-WW file, run:
+  gkeep add "ingredient_name quantity unit (<days on which ingredient is needed>, <recipes for which ingredient is needed>)"
+- Create a shell script containing all the gkeep add commands for all the ingredients. Execute the shell script to ensure that items are all created within one single process.
+- Use the authorized Google Keep connection (no login required).
+- Target list name: <shopping_list_name>. Obtain the <note_id> of the shopping list first by using gkeep search "<shopping_list_name>"
+- Handle errors gracefully (e.g., retry or log failed additions).
+
+### Exact Commands Used
+
+#### Step 1: Retrieve Paprika Recipes
+```bash
+export PAPRIKA_EMAIL="<your_email>" && export PAPRIKA_PASSWORD="<your_password>" && paprika recipes --json
+```
+
+#### Step 2: Find Note ID for Google Keep
+```bash
+source /home/administrator/.openclaw/workspace/skills/gkeep-notes/venv/bin/activate && python /home/administrator/.openclaw/workspace/skills/gkeep-notes/gkeep.py search "<title_of_your_google_keep_note>"
+```
+
+#### Step 3: Batch Add Items to Google Keep
+```bash
+# Alternative method: Create a shell script and run it in the background
+cat << 'EOF' > /tmp/export_gkeep.sh
+#!/bin/bash
+note_id="<note_id>"
+while IFS= read -r line; do
+    if [ -n "$line" ]; then
+        source /home/administrator/.openclaw/workspace/skills/gkeep-notes/venv/bin/activate
+        python /home/administrator/.openclaw/workspace/skills/gkeep-notes/gkeep.py add "$note_id" "$line"
+    fi
+done < /home/administrator/.openclaw/workspace/memory/SHOPPINGLIST_2026-XX
+EOF
+chmod +x /tmp/export_gkeep.sh
+/tmp/export_gkeep.sh
+```
+
+#### Step 4: Single Item Addition (Alternative Method)
+```bash
+source /home/administrator/.openclaw/workspace/skills/gkeep-notes/venv/bin/activate && python /home/administrator/.openclaw/workspace/skills/gkeep-notes/gkeep.py add <note_id> '<item_name>'
+```
+
+### Key Technical Notes
+- The environment variables for Paprika authentication must be set before each command
+- Note IDs are timestamp-based (e.g., 0000000000000.0000000000)
+- Virtual environment activation is required for gkeep commands
+- Items with special characters need single quotes for shell command
+- The while loop reads the shopping list file line by line and adds each item
+- The script method (/tmp/export_gkeep.sh) is a reliable way to batch-add items independently.
+
+## 7. Completion Notification
+
+- After successfully adding all items to Google Keep, send a short confirmation
+  to the user (message, notification, or voice response).
+- Indicate successful completion of both the meal plan and ingredient sync processes.
