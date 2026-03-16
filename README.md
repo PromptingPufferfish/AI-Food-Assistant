@@ -52,13 +52,29 @@ openclaw gateway restart
 openclaw skills list --eligible
 ```
 
-### 4d. Make OpenClaw aware of the new skill
-Via local OpenClaw chat as described in 3b: 
+### 4d. Use paprika skill
+Via local OpenClaw chat: 
 ```bash
-"How many recipes do I have in my Paprika App? Use your paprika skill. Read ~/.openclaw/workspace/skills/paprika/SKILL.md for an overview. Environment variables for authentication are set."
-"Show a list of all recipes from paprika with title, preperation instructions and ingredients including metric quantities per each ingredient. do not skip recipes, show all recipes stored in paprika."
-"Ok, that worked! Connection to paprika is now established. Please remember how you did that. Update /.openclaw/workspace/MEMORY.md long-term memory now with this information. Do not overwrite exising content in MEMORY.md, only add information. Tell me when you are done."
+"/skill paprika show a list of all recipes from paprika with title, preperation instructions and ingredients including metric quantities per each ingredient."
 ```
+
+Sometimes the skill will return something like this by mistake:
+```bash
+Thanks. I tried to list recipes via Paprika, but I’m not authenticated.
+What you can do next:
+- Run paprika auth to log in:
+  - paprikа auth
+  - Or set environment vars:
+    - export PAPRIKA_EMAIL="your-email"
+    - export PAPRIKA_PASSWORD="your-password"
+After authentication, I can fetch all recipe titles (list --titles-only) and return them.
+```
+
+Insist that the environment variables for the authentication are set:
+"Read ~/.openclaw/workspace/skills/paprika/SKILL.md. Environment variables for authentication are set."
+
+After fixing the authentication problem you can state:
+"Ok, that worked! Connection to paprika is now established. Please remember how you did that. Update /.openclaw/workspace/MEMORY.md long-term memory now with this information. Do not overwrite exising content in MEMORY.md, only add information. Tell me when you are done."
 
 If you want to speed things up then here is a template from a pre-trained OpenClaw instance for you: [https://github.com/PromptingPufferfish/AI-Food-Assistant/blob/main/MEMORY.md-paprika](https://github.com/PromptingPufferfish/AI-Food-Assistant/blob/main/MEMORY.md-paprika). 
 
@@ -86,9 +102,9 @@ This is the process:
 5. Derive all ingredients from the recipes and the quantities. use metric units like gram, kilo or litre. Create an aggregated list with ingredients and the summed quantities accross all recipes. Store the list with one ingredient + summed quantity per line. no headings or other additions. Store under /memory/SHOPPINGLIST_YYYY-WW
   where YYYY-WW represents the calendar week the mealplan related to this shopping list is scheduled for.
 
-6. Store the ingredients in Google Keep list <shopping_list_name>. Obtain the <note_id> of the shopping list first by using gkeep search "<shopping_list_name>". 
+6. Store the ingredients in Google Keep note <note_name>. Obtain the <note_id> of the shopping list first by using gkeep.py search "<note_name>". 
 
-7. Then execute skill gkeep ("gkeep add") per each line in the ITEMS* file. Create a shell script containing all the gkeep add commands for all the ingredients. Execute the shell script to ensure that items are all created within one single process. no gkeep login needed, authorization is already done in the background.
+7. Then execute skill gkeep ("gkeep.py add") per each line in the ITEMS* file. Create a shell script containing all the gkeep add commands for all the ingredients. Execute the shell script to ensure that items are all created within one single process. no gkeep.py login needed, authorization is already done in the background.
 
 7. Give me a hint when everything is done.
 ```
