@@ -76,7 +76,9 @@ Insist that the environment variables for the authentication are set:
 ```
 
 After fixing the authentication problem you can state:
+```bash
 "Ok, that worked! Connection to paprika is now established. Please remember how you did that. Update /.openclaw/workspace/MEMORY.md long-term memory now with this information. Do not overwrite exising content in MEMORY.md, only add information. Tell me when you are done."
+```
 
 If you want to speed things up then here is a template from a pre-trained OpenClaw instance for you: [https://github.com/PromptingPufferfish/AI-Food-Assistant/blob/main/MEMORY.md-paprika](https://github.com/PromptingPufferfish/AI-Food-Assistant/blob/main/MEMORY.md-paprika). 
 
