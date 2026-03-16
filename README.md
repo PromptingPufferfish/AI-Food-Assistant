@@ -110,9 +110,9 @@ This is the process:
 
 1. Ask for criteria to consider when planning a meal: which calendar week is the meal planning for how many persons, visitors yes/no and on which days, preferences like veggie or fish, allergic restrictions, etc.
 
-2. Retrieve recipes matching the criteria using the paprika skill. the authentication is stored in the skill, do not ask for user or password. only use paprika to search for recipes, not other tools.
+2. Retrieve recipes matching the criteria using the paprika skill. the authentication is stored in the skill, do not ask for user or password. only use paprika to search for recipes, no other tools.
 
-3. Show me the recommendated mealplan, ask for adjustments. Iterate as long a I want adjustments.
+3. Show me the recommended mealplan, ask for adjustments. Iterate as long a I want adjustments.
 
 4. When mealplan is confirmed then store it under /memory/MEALPLAN_YYYY-WW where YYYY-WW represents the calendar week the mealplan is scheduled for.
 
