@@ -86,9 +86,10 @@ If you want to speed things up then here is a template from a pre-trained OpenCl
 Can be added as a skill or as general knowledge via MEMORY.md
 
 ### 5a. Add as a skill
-Existing meal planning skills work with own recipe, meal plan and shopping list storages - usually local files in /.openclaw/memory/. If you want to develop your own skill I recommend starting with an existing one, e. g. [https://clawhub.ai/ivangdavila/meal-planner](https://clawhub.ai/ivangdavila/meal-planner). Add some additional instructions to the SKILL.md: 
+Existing meal planning skills work with own recipe, meal plan and shopping list storages - usually local files in /.openclaw/memory/. If you want to develop a skill I recommend starting with an existing one, e. g. [https://clawhub.ai/ivangdavila/meal-planner](https://clawhub.ai/ivangdavila/meal-planner). Add some additional instructions to the SKILL.md: 
 ```bash
-[...] recipes stored in ~/meal-planner/recipes/ are created from paprika skill output, shopping lists created in ~/meal-planner/shopping/ are transfered to Google Keep via gkeep-notes skill. [...]
+[...] recipes stored in ~/meal-planner/recipes/ are created from paprika skill output,
+shopping lists created in ~/meal-planner/shopping/ are transfered to Google Keep via gkeep-notes skill. [...]
 ```
 No programming skills required, describe in natural language.
 
