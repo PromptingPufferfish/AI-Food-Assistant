@@ -3,7 +3,7 @@ A free AI Food Assistant based on OpenClaw. From Paprika App recipes to meal pla
 
 # Setup
 
-## 1. Install Linux system
+## 1. Linux system
 Install full-blown Ubuntu Linux system on your machine or - as a Windows user - setup an Ubuntu distribution via Windows Subsystem for Linux:
 - Exectue cmd.exe under Windows with admin rights
 - Install Ubuntu:
@@ -12,12 +12,12 @@ wsl --install -d Ubuntu
 ```
 - Set user and password
 
-## 2. Install OpenClaw
+## 2. OpenClaw
 - In the Ubuntu shell enter:
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
-- Follow OpenClaw installation procedure, configure LLM and channel (messenger bridge)
+- Follow OpenClaw installation procedure, configure LLM and channel (= messenger bridge, e. g. to WhatsApp or Telegram)
 - Finalize the OpenClaw installation - init, update, install ClawHub:
 ```bash
 newgrp
@@ -27,11 +27,11 @@ openclaw dashboard
 sudo npm install -g clawhub
 ```
 
-## 3. Install & use gkeep-notes skill 
+## 3. gkeep-notes skill 
 
 As described in [PromptingPufferfish/gkeep-notes/blob/main/README.md](https://github.com/PromptingPufferfish/gkeep-notes/blob/main/README.md)
 
-## 4. Install & use paprika skill
+## 4. paprika skill
 ### 4a. Installation via clawhub.ai 
 Install paprika skill from ClawHub ([Link to paprika skill on ClawHub](https://clawhub.ai/mjrussell/paprika))
 ```bash
@@ -82,14 +82,14 @@ Ok, that worked! Connection to paprika is now established. Please remember how y
 
 If you want to speed things up then here is a template from a pre-trained OpenClaw instance for you: [https://github.com/PromptingPufferfish/AI-Food-Assistant/blob/main/MEMORY.md-paprika](https://github.com/PromptingPufferfish/AI-Food-Assistant/blob/main/MEMORY.md-paprika). 
 
-## 5. Add meal planning functionality
+## 5. Meal planning functionality
 Can be added as a skill or as general knowledge via MEMORY.md
 
 ### 5a. Add as a skill
 Existing meal planning skills work with own recipe, meal plan and shopping list storages - usually local files in /.openclaw/memory/. If you want to develop a skill I recommend starting with an existing one, e. g. [https://clawhub.ai/ivangdavila/meal-planner](https://clawhub.ai/ivangdavila/meal-planner). Add some additional instructions to the SKILL.md: 
 ```bash
 [...] recipes stored in ~/meal-planner/recipes/ are created from paprika skill output,
-shopping lists created in ~/meal-planner/shopping/ are transfered to Google Keep via gkeep-notes skill. [...]
+shopping lists created in ~/meal-planner/shopping/ are transferred to Google Keep via gkeep-notes skill. [...]
 ```
 No programming skills required, describe in natural language.
 
